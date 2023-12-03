@@ -1,11 +1,36 @@
 version: "3.9"
 services:
-  discord-bot:
+  harmonica-bot:
     build:
       context: .
-    image: "discord-bot"
-    container_name: "discord-bot"
+    image: "harmonica-bot"
+    container_name: "harmonica-bot"
+    restart: always
+    networks:
+      - harmonica
+    depends_on:
+      - harmonica-db
     expose:
       - 32767
     env_file:
       - .env
+
+  harmonica-db:
+    image: mongo
+    restart: always
+    container_name: harmonica-db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: LPA7cbRNCVtDh2e
+      MONGO_INITDB_DATABASE: harmonica
+    networks:
+      - harmonica
+    volumes:
+      - 'harmonica_db:/data/db/'
+
+volumes:
+  harmonica_db:
+    name: harmonica_db
+networks:
+  harmonica:
+    name: harmonica
